@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEventListener, useMountEffect, useUnmountEffect } from 'primereact/hooks';
+import { useEventListener, useUnmountEffect } from 'primereact/hooks';
 import React, { useContext, useEffect, useRef } from 'react';
 import { classNames } from 'primereact/utils';
 import AppFooter from './AppFooter';
 import AppSidebar from './AppSidebar';
 import AppTopbar from './AppTopbar';
-import AppConfig from './AppConfig';
 import { LayoutContext } from './context/layoutcontext';
 import { PrimeReactContext } from 'primereact/api';
 import { ChildContainerProps, LayoutState, AppTopbarRef } from '@/types';
@@ -133,7 +131,6 @@ const Layout = ({ children }: ChildContainerProps) => {
                     <div className="layout-main">{children}</div>
                     <AppFooter />
                 </div>
-                <AppConfig />
                 <div className="layout-mask"></div>
             </div>
         </React.Fragment>
