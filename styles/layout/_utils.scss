@@ -19,9 +19,34 @@
 }
 
 .p-toast {
+
     &.p-toast-top-right,
     &.p-toast-top-left,
     &.p-toast-top-center {
         top: 100px;
     }
+}
+
+/* Đường cuộn */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+/* Đường cuộn */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* Nút cuộn */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+    border: 3px solid #f1f1f1;
+}
+
+/* Khi hover vào nút cuộn */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
