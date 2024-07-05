@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Calendar } from 'primereact/calendar';
 import React, { useState } from 'react';

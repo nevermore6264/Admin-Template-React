@@ -61,7 +61,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     <i className="pi pi-user"></i>
                     <span>Profile</span>
                 </button>
-                <OverlayPanel ref={op}>
+                <OverlayPanel ref={op} className="layout-custom-menu">
                     <Menu model={items} style={{ border: 'none', boxShadow: 'none' }} />
                 </OverlayPanel>
             </div>
