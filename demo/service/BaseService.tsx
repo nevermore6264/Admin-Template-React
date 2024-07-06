@@ -23,7 +23,6 @@ export class BaseService {
     }
 
     async saveOrUpdate(formData: Record<string, any>): Promise<AxiosResponse<any>> {
-        // formData = CommonUtil.convertFormFile(formData); // Uncomment if `convertFormFile` method is used
         return await axios.post(`${this.baseUrl}`, formData);
     }
 
@@ -41,15 +40,16 @@ export class BaseService {
         return await axios.get(`${this.baseUrl}/find-all`);
     }
 
-    private getConfig(): { publicRuntimeConfig: { url: string; path: string; pathV2: string } } {
-        // const token = localStorage.getItem('accessToken');
+    private getConfig(): { publicRuntimeConfig: { url: string; path: string } } {
+        // Định nghĩa một đối tượng cấu hình Axios với các tiêu đề cho các yêu cầu HTTP
         const axiosConfig: AxiosRequestConfig = {
             headers: {
-                'Content-Type': 'application/json;charset=UTF-8',
-                'Access-Control-Allow-Origin': '*'
-                // Authorization: `Bearer ${token}`
+                'Content-Type': 'application/json;charset=UTF-8', // Xác định loại nội dung của yêu cầu là JSON được mã hóa UTF-8
+                'Access-Control-Allow-Origin': '*' // Tiêu đề CORS cho phép mọi nguồn truy cập vào phản hồi
             }
         };
-        return axiosConfig as any; // Cast to any as specific type may vary
+
+        // Trả về đối tượng axiosConfig đã được ép kiểu thành `any`, đây là cách sai
+        return axiosConfig as any; // Ép kiểu thành any để bỏ qua kiểm tra kiểu của TypeScript, nên tránh việc này
     }
 }

@@ -8,8 +8,16 @@ import { AppMenuItem } from '@/types';
 const AppMenu = () => {
     const model: AppMenuItem[] = [
         {
-            label: 'Home',
+            label: 'Trang chủ',
             items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+        },
+        {
+            label: 'Quản lý',
+            items: [
+                { label: 'Quản lý loại sản phẩm', icon: 'pi pi-fw pi-tag', to: '/pages/category-management' },
+                { label: 'Quản lý sản phẩm', icon: 'pi pi-fw pi-shopping-cart', to: '/pages/product-management' },
+                { label: 'Quản lý sản phẩm', icon: 'pi pi-fw pi-user', to: '/pages/user-management' }
+            ]
         },
         {
             label: 'UI Components',
