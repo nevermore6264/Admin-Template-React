@@ -1,29 +1,42 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import _ from 'lodash';
+import axios, { AxiosResponse } from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config(); // Load environment variables from .env file
+
+interface Config {
+    publicRuntimeConfig: {
+        url: string;
+        path: string;
+    };
+}
 
 export class BaseService {
-    baseUrl: string;
+    private baseUrl: string;
 
     constructor(module: string) {
-        this.baseUrl = `${this.getConfig().publicRuntimeConfig.url}${this.getConfig().publicRuntimeConfig.path}${module}`;
+        const config = this.getConfig();
+        if (!config.publicRuntimeConfig) {
+            throw new Error('Configuration is missing');
+        }
+        this.baseUrl = `${config.publicRuntimeConfig.url}${config.publicRuntimeConfig.path}${module}`;
     }
 
     async search(formData: Record<string, any> = {}, event?: string): Promise<AxiosResponse<any>> {
-        formData = _.cloneDeep(formData);
+        const requestData = { ...formData };
         if (event) {
-            formData['_search'] = event;
+            requestData['_search'] = event;
         }
         return await axios.get(`${this.baseUrl}/search`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            params: formData
+            params: requestData
         });
     }
 
     async saveOrUpdate(formData: Record<string, any>): Promise<AxiosResponse<any>> {
-        return await axios.post(`${this.baseUrl}`, formData);
+        return await axios.post(this.baseUrl, formData);
     }
 
     async findById(id: string | number): Promise<AxiosResponse<any>> {
@@ -40,16 +53,13 @@ export class BaseService {
         return await axios.get(`${this.baseUrl}/find-all`);
     }
 
-    private getConfig(): { publicRuntimeConfig: { url: string; path: string } } {
-        // Định nghĩa một đối tượng cấu hình Axios với các tiêu đề cho các yêu cầu HTTP
-        const axiosConfig: AxiosRequestConfig = {
-            headers: {
-                'Content-Type': 'application/json;charset=UTF-8', // Xác định loại nội dung của yêu cầu là JSON được mã hóa UTF-8
-                'Access-Control-Allow-Origin': '*' // Tiêu đề CORS cho phép mọi nguồn truy cập vào phản hồi
+    private getConfig(): Config {
+        // Provide a valid configuration here
+        return {
+            publicRuntimeConfig: {
+                url: process.env.API_URL!,
+                path: process.env.API_URL!
             }
         };
-
-        // Trả về đối tượng axiosConfig đã được ép kiểu thành `any`, đây là cách sai
-        return axiosConfig as any; // Ép kiểu thành any để bỏ qua kiểm tra kiểu của TypeScript, nên tránh việc này
     }
 }
