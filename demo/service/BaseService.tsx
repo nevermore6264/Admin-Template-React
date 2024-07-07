@@ -1,49 +1,47 @@
-import axios, { AxiosResponse } from 'axios'; // Import axios and AxiosResponse for making HTTP requests
 // BaseService.tsx
-import getConfig from 'next/config';
+import axios, { AxiosResponse } from 'axios';
 
 export class BaseService {
     private baseUrl: string;
 
     constructor(module: string) {
-        this.baseUrl = getConfig().publicRuntimeConfig.url + getConfig().publicRuntimeConfig.path + module;
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL; // Sử dụng biến môi trường trực tiếp
+        const apiPath = process.env.NEXT_PUBLIC_API_PATH; // Sử dụng biến môi trường trực tiếp
+        if (!apiUrl || !apiPath) {
+            throw new Error('API URL or PATH is not defined in the environment variables');
+        }
+        this.baseUrl = `${apiUrl}${apiPath}${module}`;
     }
 
-    // Method to search with optional form data and event
     async search(formData: Record<string, any> = {}, event?: string): Promise<AxiosResponse<any>> {
-        const requestData = { ...formData }; // Clone form data
+        const requestData = { ...formData };
         if (event) {
-            requestData['_search'] = event; // Add event to request data if present
+            requestData['_search'] = event;
         }
         return await axios.get(`${this.baseUrl}/search`, {
             headers: {
-                'Content-Type': 'application/json', // Set content type
-                'Access-Control-Allow-Origin': '*' // Allow CORS
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
             },
-            params: requestData // Attach request data as query parameters
+            params: requestData
         });
     }
 
-    // Method to save or update data
     async saveOrUpdate(formData: Record<string, any>): Promise<AxiosResponse<any>> {
-        return await axios.post(this.baseUrl, formData); // Post form data to base URL
+        return await axios.post(this.baseUrl, formData);
     }
 
-    // Method to find by ID
     async findById(id: string | number): Promise<AxiosResponse<any>> {
         return await axios.get(`${this.baseUrl}/${id}`, {
-            headers: { 'Content-Type': 'application/json' } // Set content type
+            headers: { 'Content-Type': 'application/json' }
         });
     }
 
-    // Method to delete by ID
     async delete(id: string | number): Promise<AxiosResponse<any>> {
-        return await axios.delete(`${this.baseUrl}/${id}`); // Delete by ID
+        return await axios.delete(`${this.baseUrl}/${id}`);
     }
 
-    // Method to find all entries
     async findAll(): Promise<AxiosResponse<any>> {
-        return await axios.get(`${this.baseUrl}/find-all`); // Get all entries
+        return await axios.get(`${this.baseUrl}/find-all`);
     }
-
 }
