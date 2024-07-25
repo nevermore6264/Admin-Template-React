@@ -5,8 +5,8 @@ export class BaseService {
     private baseUrl: string;
 
     constructor(module: string) {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL; // Sử dụng biến môi trường trực tiếp
-        const apiPath = process.env.NEXT_PUBLIC_API_PATH; // Sử dụng biến môi trường trực tiếp
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+        const apiPath = process.env.NEXT_PUBLIC_API_PATH;
         if (!apiUrl || !apiPath) {
             throw new Error('API URL or PATH is not defined in the environment variables');
         }
@@ -27,8 +27,12 @@ export class BaseService {
         });
     }
 
-    async saveOrUpdate(formData: Record<string, any>): Promise<AxiosResponse<any>> {
-        return await axios.post(this.baseUrl, formData);
+    async insert(formData: Record<string, any>): Promise<AxiosResponse<any>> {
+        return await axios.post(`${this.baseUrl}/insert`, formData);
+    }
+
+    async update(id: string | number, formData: Record<string, any>): Promise<AxiosResponse<any>> {
+        return await axios.put(`${this.baseUrl}/update/${id}`, formData);
     }
 
     async findById(id: string | number): Promise<AxiosResponse<any>> {
@@ -38,10 +42,10 @@ export class BaseService {
     }
 
     async delete(id: string | number): Promise<AxiosResponse<any>> {
-        return await axios.delete(`${this.baseUrl}/${id}`);
+        return await axios.delete(`${this.baseUrl}/delete/${id}`);
     }
 
     async findAll(): Promise<AxiosResponse<any>> {
-        return await axios.get(`${this.baseUrl}/find-all`);
+        return await axios.get(`${this.baseUrl}/get-all`);
     }
 }
