@@ -4,11 +4,11 @@ import { CategoryService } from '@/demo/service/CategoryService';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { Tag } from 'primereact/tag';
 import React, { useEffect, useState } from 'react';
+import CreateDialog from './CreateDialog'; // Adjust the import path as needed
+import DeleteDialog from './DeleteDialog'; // Adjust the import path as needed
+import EditDialog from './EditDialog'; // Adjust the import path as needed
 
 interface Category {
     id: string;
@@ -107,27 +107,6 @@ const CategoryManagement = () => {
         setIsDeleteDialogVisible(true);
     };
 
-    const createDialogFooter = (
-        <div>
-            <Button label="Hủy" icon="pi pi-times" className="p-button-default" onClick={() => setIsCreateDialogVisible(false)} />
-            <Button label="Lưu" icon="pi pi-check" className="p-button-success" onClick={handleCreateCategory} />
-        </div>
-    );
-
-    const editDialogFooter = (
-        <div>
-            <Button label="Hủy" icon="pi pi-times" className="p-button-default" onClick={() => setIsEditDialogVisible(false)} />
-            <Button label="Lưu" icon="pi pi-check" className="p-button-success" onClick={handleEditCategory} />
-        </div>
-    );
-
-    const deleteDialogFooter = (
-        <div>
-            <Button label="Hủy" icon="pi pi-times" className="p-button-default" onClick={() => setIsDeleteDialogVisible(false)} />
-            <Button label="Xóa" icon="pi pi-check" className="p-button-danger" onClick={handleDeleteCategory} />
-        </div>
-    );
-
     return (
         <div className="card">
             <DataTable value={categories} header={header} footer={footer} tableStyle={{ minWidth: '60rem' }} onRowClick={(e: any) => onCategorySelect(e.data)}>
@@ -145,39 +124,28 @@ const CategoryManagement = () => {
                 />
             </DataTable>
 
-            <Dialog visible={isCreateDialogVisible} style={{ width: '450px' }} header="Thêm mới loại sản phẩm" modal footer={createDialogFooter} onHide={() => setIsCreateDialogVisible(false)}>
-                <div className="field grid">
-                    <label htmlFor="name" className="col-12 mb-2 md:col-2 md:mb-0">
-                        Tên
-                    </label>
-                    <div className="col-12 md:col-10">
-                        <InputText id="name" value={newCategory.name} onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })} />
-                    </div>
-                </div>
-                <div className="field grid">
-                    <label htmlFor="description" className="col-12 mb-2 md:col-2 md:mb-0">
-                        Mô tả
-                    </label>
-                    <div className="col-12 md:col-10">
-                        <InputTextarea id="description" value={newCategory.description} onChange={(e) => setNewCategory({ ...newCategory, description: e.target.value })} />
-                    </div>
-                </div>
-            </Dialog>
+            <CreateDialog
+                visible={isCreateDialogVisible}
+                onHide={() => setIsCreateDialogVisible(false)}
+                onSave={handleCreateCategory}
+                newCategory={newCategory}
+                setNewCategory={setNewCategory}
+            />
 
-            <Dialog visible={isEditDialogVisible} style={{ width: '450px' }} header="Chỉnh sửa loại sản phẩm" modal footer={editDialogFooter} onHide={() => setIsEditDialogVisible(false)}>
-                <div className="field">
-                    <label htmlFor="name">Tên loại sản phẩm</label>
-                    <InputText id="name" value={selectedCategory?.name || ''} onChange={(e) => setSelectedCategory({ ...selectedCategory, name: e.target.value })} />
-                </div>
-                <div className="field">
-                    <label htmlFor="description">Mô tả</label>
-                    <InputText id="description" value={selectedCategory?.description || ''} onChange={(e) => setSelectedCategory({ ...selectedCategory, description: e.target.value })} />
-                </div>
-            </Dialog>
+            <EditDialog
+                visible={isEditDialogVisible}
+                onHide={() => setIsEditDialogVisible(false)}
+                onSave={handleEditCategory}
+                category={selectedCategory}
+                setCategory={setSelectedCategory}
+            />
 
-            <Dialog visible={isDeleteDialogVisible} style={{ width: '450px' }} header="Xóa loại sản phẩm" modal footer={deleteDialogFooter} onHide={() => setIsDeleteDialogVisible(false)}>
-                <p>Bạn có chắc chắn muốn xóa loại sản phẩm "{selectedCategory?.name}"?</p>
-            </Dialog>
+            <DeleteDialog
+                visible={isDeleteDialogVisible}
+                onHide={() => setIsDeleteDialogVisible(false)}
+                onDelete={handleDeleteCategory}
+                categoryName={selectedCategory?.name || ''}
+            />
         </div>
     );
 };
